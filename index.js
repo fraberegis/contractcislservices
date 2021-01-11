@@ -222,44 +222,53 @@ app.get('/policies/:id/documents', (req,res) => {
         .then((response) => {
 //            console.log('Policy documents got')
 //            console.log(response.data)
-            const documentsList = response.data
-            if (documentsList.length > 0){
-                const docRequests = new Array()
-                documentsList.forEach(document => {
-//                    console.log(document.documentId)
-                    let docDataURI = String(apigeeServer + Config.get('policy.url.document'))
-                                        .replace(searchIdRegEx, req.params.id)
-                                        .replace(searchDocIdRegEx, document.documentId)
-                    docRequests.push(
-                        Axios.get(docDataURI,{timeout: Config.get('timeout.short'),headers: headers})
-                        .then(function (response) {
-//                            console.log(response.data.fileName)
-                            return response.data
-                        })
-                        .catch(error => { return error 
-                        })
-                    )
-                });
-//                console.log(docRequests.length)
-                Promise.all(docRequests)
-                .then(responses => { 
-//                    console.log(responses.length)
-                    let finalDocs = new Array()
-                    responses.forEach(oneResponse => {
-//                        console.log(oneResponse)
-                        if (oneResponse.documentStorageType != 'L' && 
-                            typeof oneResponse.data != "undefined" && oneResponse.data != null){
-                                finalDocs.push(oneResponse)
-                            }
-                    });
-                    res.status(200).json(finalDocs)
-                })
-            } else {
-                res.status(200).json(documentsList)
-            }
+            return res.status(200).json(response.data)
         })    
         .catch((error) => {
-//            console.log('Error while getting Policy documents: '+error.response.status)
+            console.log('Error while getting Policy documents: '+error.response.status)
+            return res.status(error.response.status).json(error.response.data)
+        })    
+    })
+    .catch((error) => {
+        return res.status(error.response.status).json(error.response.data)
+    })
+})
+
+/**
+ * Get one Policy documents 
+ */
+app.get('/policies/:id/documents/:documentId', (req,res) => {
+    const searchIdRegEx = new RegExp(':id', 'g')
+    const searchDocIdRegEx = new RegExp(':documentId', 'g')
+    // Get access token
+    Axios({
+        method: 'post', 
+        url: tokenURI,
+        timeout: Config.get('timeout.short'),
+        data: bodyData})
+    .then((response) => {
+//        console.log('Token got: '+response.status)
+        const headers = {
+            'Accept': 'application/json',
+            'subscriptionCountry': 'EUR',
+            'Authorization': 'Bearer ' + response.data.access_token
+        }
+//        console.log(headers)
+//        console.log(params)
+        let policyOneDocumentURI = apigeeServer + Config.get('policy.url.document')
+        Axios({
+            method: 'get', 
+            url: String(policyOneDocumentURI).replace(searchIdRegEx, req.params.id).replace(searchDocIdRegEx, req.params.documentId), 
+            timeout: Config.get('timeout.short'),
+            headers: headers
+        })
+        .then((response) => {
+//            console.log('Policy documents got')
+//            console.log(response.data)
+            return res.status(200).json(response.data)
+        })    
+        .catch((error) => {
+            console.log('Error while getting Policy document: '+error.response.status)
             return res.status(error.response.status).json(error.response.data)
         })    
     })
