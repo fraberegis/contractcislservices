@@ -1,0 +1,25 @@
+{
+  "name": "contractcislservices",
+  "version": "1.0.0",
+  "description": "CISL webservices for Contract",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fraberegis/contractcislservices.git"
+  },
+  "author": "F. Rabe-Regis",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/fraberegis/contractcislservices/issues"
+  },
+  "homepage": "https://github.com/fraberegis/contractcislservices#readme",
+  "dependencies": {
+    "axios": "^0.21.0",
+    "config": "^3.3.3",
+    "express": "^4.17.1",
+    "js-yaml": "^3.14.0"
+  }
+}

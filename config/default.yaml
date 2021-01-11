@@ -1,0 +1,28 @@
+apigee:
+  oAuth:
+    resource: /oauth/client_credential/accesstoken
+    grantType: client_credentials
+    non-prod:
+      clientId: g43qw9LQLo9AHBM1ojqaaMQX2A6OrtTi
+      clientSecret: 7IAClLRC0xVLGAtB
+    prod:
+      clientId: g43qw9LQLo9AHBM1ojqaaMQX2A6OrtTi
+      clientSecret: 7IAClLRC0xVLGAtB
+  server: 
+    mntn: https://maint-allianz-partners.apis.allianz.com
+    uat: https://uat-allianz-partners.apis.allianz.com
+    prod: https://prod-allianz-partners.apis.allianz.com
+
+policy:
+  url:
+    search: /Travel/cisl1/search/policies
+    details: /Travel/cisl0/contracts/:id
+    documents: /Travel/cisl1/contracts/:id/policies/:id/documents
+    document: /Travel/cisl1/contracts/:id/policies/:id/documents/:documentId/data
+
+timeout:
+  short: 10000
+  long: 30000
+
+server:
+  port: 3000
